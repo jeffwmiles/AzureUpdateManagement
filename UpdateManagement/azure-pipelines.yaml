@@ -1,0 +1,56 @@
+trigger:
+  branches:
+    include:
+    - ITSM-640
+  paths:
+    include:
+    - PowerShell/UpdateManagement/*
+
+    #exclude:
+    #- docs/README.md
+
+pool:
+    vmImage: 'ubuntu-latest'
+
+steps:
+- task: AzurePowerShell@5
+  inputs:
+    azureSubscription: 'automation-rg' #This is the devops service connection name
+    ErrorActionPreference: 'Stop'
+    FailOnStandardError: true
+    ScriptType: 'FilePath'
+    ScriptPath: './PowerShell/UpdateManagement/Publish-AARunbookFromDevOps.ps1'
+    ScriptArguments:
+      -runbookname Get-AzCachedAccessToken `
+      -runbookfile ./PowerShell/UpdateManagement/Get-AzCachedAccessToken.ps1 #`
+      #-scheduleName $(userPassword)
+    azurePowerShellVersion: 'LatestVersion'
+  displayName: Deploy AA Runbook - Get-AzCachedAccessToken
+
+- task: AzurePowerShell@5
+  inputs:
+    azureSubscription: 'automation-RG' #This is the devops service connection name
+    ErrorActionPreference: 'Stop'
+    FailOnStandardError: true
+    ScriptType: 'FilePath'
+    ScriptPath: './PowerShell/UpdateManagement/Publish-AARunbookFromDevOps.ps1'
+    ScriptArguments:
+      -runbookname New-UpdateManagementSchedule `
+      -runbookfile ./PowerShell/UpdateManagement/New-UpdateManagementSchedule.ps1 #`
+      #-scheduleName $(userPassword)
+    azurePowerShellVersion: 'LatestVersion'
+  displayName: Deploy AA Runbook - New-UpdateManagementSchedule
+
+- task: AzurePowerShell@5
+  inputs:
+    azureSubscription: 'automation-RG' #This is the devops service connection name
+    ErrorActionPreference: 'Stop'
+    FailOnStandardError: true
+    ScriptType: 'FilePath'
+    ScriptPath: './PowerShell/UpdateManagement/Publish-AARunbookFromDevOps.ps1'
+    ScriptArguments:
+      -runbookname Set-UpdateManagementSchedule `
+      -runbookfile ./PowerShell/UpdateManagement/CC-UpdateManagementSchedule-Deploy.ps1 `
+      -scheduleName "1stOfMonth-UpdateManagementSchedules"
+    azurePowerShellVersion: 'LatestVersion'
+  displayName: Deploy AA Runbook - Set-UpdateManagementSchedule
