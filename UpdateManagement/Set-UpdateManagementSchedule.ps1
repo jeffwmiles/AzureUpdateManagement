@@ -1,9 +1,13 @@
 
 # This script is used to deploy UpdateManagement schedules.
-
-$resourceGroupName = "automation-rg" # Resource Group the Automation Account resides in
-$automationAccountName = "automation-acct"
-$automationSubscription = "INSERT SUBSCRIPTION ID" # Subscription that the Automation Account resides in
+param(
+    [parameter(Mandatory = $false)]
+    [string]$resourceGroupName = "automation-rg", # Resource Group the Automation Account resides in
+    [parameter(Mandatory = $false)]
+    [string]$automationAccountName = "automation-acct",
+    [parameter(Mandatory = $false)]
+    [DateTime]$automationSubscription = "INSERT SUBSCRIPTION ID" # Subscription that the Automation Account resides in
+)
 
 #Perform the initial login to Azure, using Automation RunAs Account
 $connectionName = "AzureRunAsConnection"

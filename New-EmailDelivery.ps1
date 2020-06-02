@@ -24,7 +24,7 @@ Param (
         $SMTPClient = New-Object Net.Mail.SmtpClient($SmtpServer, 587)
         $SMTPMessage.IsBodyHtml = $true
         $SMTPClient.EnableSsl = $true
-        $SMTPClient.Credentials = Get-AutomationPSCredential -Name 'PostmarkSMTP' #New-Object System.Net.NetworkCredential($SmtpUsername, $SmtpPassword);
+        $SMTPClient.Credentials = Get-AutomationPSCredential -Name 'SmtpCreds' #New-Object System.Net.NetworkCredential($SmtpUsername, $SmtpPassword);
         $SMTPClient.Send($SMTPMessage)
         Remove-Variable -Name SMTPClient
         Remove-Variable -Name SmtpPassword

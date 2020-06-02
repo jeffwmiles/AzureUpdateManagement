@@ -1,7 +1,7 @@
 trigger:
   branches:
     include:
-    - ITSM-640
+    - master
   paths:
     include:
     - PowerShell/UpdateManagement/*
@@ -13,6 +13,20 @@ pool:
     vmImage: 'ubuntu-latest'
 
 steps:
+- task: AzurePowerShell@5
+  inputs:
+    azureSubscription: 'automation-rg' #This is the devops service connection name
+    ErrorActionPreference: 'Stop'
+    FailOnStandardError: true
+    ScriptType: 'FilePath'
+    ScriptPath: './PowerShell/UpdateManagement/Publish-AARunbookFromDevOps.ps1'
+    ScriptArguments:
+      -runbookname New-EmailDelivery `
+      -runbookfile ./PowerShell/New-EmailDelivery.ps1 #`
+      #-scheduleName $(userPassword)
+    azurePowerShellVersion: 'LatestVersion'
+  displayName: Deploy AA Runbook - New-EmailDelivery
+
 - task: AzurePowerShell@5
   inputs:
     azureSubscription: 'automation-rg' #This is the devops service connection name
